@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
-from IPython import embed_kernel
 
-import pandas as pd
 import pand8
+import pandas as pd
 import tfs
+from IPython import embed_kernel
 
 try:
     from ocelot.cpbd import elements as ole
@@ -13,7 +13,6 @@ except ImportError:
 
 
 import latdraw.lattice as lattice
-
 
 
 class FileTypeError(RuntimeError):
@@ -70,31 +69,30 @@ def _loop_madx_df(tfs_df, survey):
         else:
             k1 = k2 = k3 = 0
 
-        match keyword:
-            case "DRIFT":
-                yield lattice.Drift(name, position, length)
-            case "RBEND":
-                yield lattice.RBend(name, position, length, tup.ANGLE)
-            case "SBEND":
-                yield lattice.SBend(name, position, length, tup.ANGLE)
-            case "QUADRUPOLE":
-                yield lattice.Quadrupole(name, position, length, k1)
-            case "SEXTUPOLE":
-                yield lattice.Sextupole(name, position, length, k2)
-            case "OCTUPOLE":
-                yield lattice.Sextupole(name, position, length, k3)
-            case "HKICKER":
-                yield lattice.HKicker(name, position, length, tup.ANGLE)
-            case "VKICKER":
-                yield lattice.VKicker(name, position, length, tup.ANGLE)
-            case "KICKER":
-                yield lattice.Kicker(name, position, length, tup.ANGLE)
-            case "MARKER":
-                yield lattice.Marker(name, position)
-            case "MONITOR":
-                yield lattice.Monitor(name,  position)
-            case _:
-                raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
+        if keyword == "DRIFT":
+            yield lattice.Drift(name, position, length)
+        elif keyword == "RBEND":
+            yield lattice.RBend(name, position, length, tup.ANGLE)
+        elif keyword == "SBEND":
+            yield lattice.SBend(name, position, length, tup.ANGLE)
+        elif keyword == "QUADRUPOLE":
+            yield lattice.Quadrupole(name, position, length, k1)
+        elif keyword == "SEXTUPOLE":
+            yield lattice.Sextupole(name, position, length, k2)
+        elif keyword == "OCTUPOLE":
+            yield lattice.Sextupole(name, position, length, k3)
+        elif keyword == "HKICKER":
+            yield lattice.HKicker(name, position, length, tup.ANGLE)
+        elif keyword == "VKICKER":
+            yield lattice.VKicker(name, position, length, tup.ANGLE)
+        elif keyword == "KICKER":
+            yield lattice.Kicker(name, position, length, tup.ANGLE)
+        elif keyword == "MARKER":
+            yield lattice.Marker(name, position)
+        elif keyword == "MONITOR":
+            yield lattice.Monitor(name,  position)
+        else:
+            raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
 
 def read_mad8(fname):
     fname = os.fspath(fname) # Accept any pathlike object
@@ -123,41 +121,40 @@ def _loop_mad8_df(mad8_df, is_survey):
         position = tup.X, tup.Y, z
         keyword = tup.KEYWORD
 
-        match keyword:
-            case "": # Skip this blank element that starts every mad8 lattice?
-                pass
-            case "DRIF":
-                yield lattice.Drift(name, position, length)
-            case "RBEN":
-                yield lattice.RBend(name, position, length, tup.ANGLE)
-            case "SBEN":
-                yield lattice.SBend(name, position, length, tup.ANGLE)
-            case "QUAD":
-                yield lattice.Quadrupole(name, position, length, tup.K1)
-            case "SEXT":
-                yield lattice.Sextupole(name, position, length, tup.K2)
-            case "OCTU":
-                yield lattice.Sextupole(name, position, length, tup.K3)
-            case "HKIC":
-                yield lattice.HKicker(name, position, length, tup.ANGLE)
-            case "VKIC":
-                yield lattice.VKicker(name, position, length, tup.ANGLE)
-            case "KICK":
-                yield lattice.Kicker(name, position, length, tup.ANGLE)
-            case "MARK":
-                yield lattice.Marker(name, position)
-            case "MONI":
-                yield lattice.Monitor(name,  position)
-            case "SOLE":
-                yield lattice.Solenoid(name, position, length)
-            case "ECOL":
-                yield lattice.Collimator(name, position, length)
-            case "LCAV":
-                yield lattice.Cavity(name, position, length)
-            case "MATR":
-                yield lattice.GenericMap(name, position, length)
-            case _:
-                raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
+        if keyword == "": # Skip this blank element that starts every mad8 lattice?
+            pass
+        elif keyword == "DRIF":
+            yield lattice.Drift(name, position, length)
+        elif keyword == "RBEN":
+            yield lattice.RBend(name, position, length, tup.ANGLE)
+        elif keyword == "SBEN":
+            yield lattice.SBend(name, position, length, tup.ANGLE)
+        elif keyword == "QUAD":
+            yield lattice.Quadrupole(name, position, length, tup.K1)
+        elif keyword == "SEXT":
+            yield lattice.Sextupole(name, position, length, tup.K2)
+        elif keyword == "OCTU":
+            yield lattice.Sextupole(name, position, length, tup.K3)
+        elif keyword == "HKIC":
+            yield lattice.HKicker(name, position, length, tup.ANGLE)
+        elif keyword == "VKIC":
+            yield lattice.VKicker(name, position, length, tup.ANGLE)
+        elif keyword == "KICK":
+            yield lattice.Kicker(name, position, length, tup.ANGLE)
+        elif keyword == "MARK":
+            yield lattice.Marker(name, position)
+        elif keyword == "MONI":
+            yield lattice.Monitor(name,  position)
+        elif keyword == "SOLE":
+            yield lattice.Solenoid(name, position, length)
+        elif keyword == "ECOL":
+            yield lattice.Collimator(name, position, length)
+        elif keyword == "LCAV":
+            yield lattice.Cavity(name, position, length)
+        elif keyword == "MATR":
+            yield lattice.GenericMap(name, position, length)
+        else:
+            raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
 
 
 # def _like()
@@ -195,27 +192,26 @@ def _loop_bdsim_survey_df(bdsim_survey_df, straighten=False):
         if keyword in ignoreable_types:
             continue
 
-        match keyword:
-            case "drift":
-                yield lattice.Drift(name, position, length)
-            case "rbend":
-                yield lattice.RBend(name, position, length, tup.Angle)
-            case "sbend":
-                yield lattice.SBend(name, position, length, tup.Angle)
-            case "quadrupole":
-                yield lattice.Quadrupole(name, position, length, tup.k1)
-            case "sextupol":
-                yield lattice.Sextupole(name, position, length, tup.k2)
-            case "octupole":
-                yield lattice.Sextupole(name, position, length, tup.k3)
-            case "hkicker":
-                yield lattice.HKicker(name, position, length, tup.Angle)
-            case "vkicker":
-                yield lattice.VKicker(name, position, length, tup.Angle)
-            case "kicker":
-                yield lattice.Kicker(name, position, length, tup.Angle)
-            case _:
-                raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
+        if keyword == "drift":
+            yield lattice.Drift(name, position, length)
+        elif keyword == "rbend":
+            yield lattice.RBend(name, position, length, tup.Angle)
+        elif keyword == "sbend":
+            yield lattice.SBend(name, position, length, tup.Angle)
+        elif keyword == "quadrupole":
+            yield lattice.Quadrupole(name, position, length, tup.k1)
+        elif keyword == "sextupol":
+            yield lattice.Sextupole(name, position, length, tup.k2)
+        elif keyword == "octupole":
+            yield lattice.Sextupole(name, position, length, tup.k3)
+        elif keyword == "hkicker":
+            yield lattice.HKicker(name, position, length, tup.Angle)
+        elif keyword == "vkicker":
+            yield lattice.VKicker(name, position, length, tup.Angle)
+        elif keyword == "kicker":
+            yield lattice.Kicker(name, position, length, tup.Angle)
+        else:
+            raise UnknownElementType(f"NAME={name}, KEYWORD={keyword}")
 
 
 def lattice_from_ocelot(ocelot_lattice):
